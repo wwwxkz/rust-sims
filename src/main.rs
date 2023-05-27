@@ -10,11 +10,20 @@
 //     largest
 // }
 
-// Entity
+#[derive(Debug, Clone, Copy)]
 struct Entity {
     x: u32,
     y: u32,
     integrity: u32,
+}
+
+#[derive(Clone)]
+struct Person {
+    entity: Entity,
+    name: String,
+    height: u32,
+    weight: u32,
+    health: u32,
 }
 
 trait Position {
@@ -25,6 +34,10 @@ trait Position {
 trait Integrity {
     fn get_integrity(&self) -> u32;
     fn set_integrity(&mut self, integrity: u32);
+}
+
+trait Profile {
+    fn get_profile(&self) -> (Entity, String, u32, u32, u32);
 }
 
 impl Position for Entity {
@@ -40,6 +53,19 @@ impl Position for Entity {
     }
 }
 
+impl Position for Person {
+    fn get_position(&self) -> (u32, u32) {
+        return (
+            self.entity.x,
+            self.entity.y
+        );
+    }
+    fn set_position(&mut self, x: u32, y: u32) {
+        self.entity.x = x;
+        self.entity.y = y;
+    }
+}
+
 impl Integrity for Entity {
     fn get_integrity(&self) -> u32 {
         return self.integrity;
@@ -49,25 +75,20 @@ impl Integrity for Entity {
     }
 }
 
-// Person
-struct Person {
-    entity: Entity,
-    name: String,
-    height: u32,
-    weight: u32,
-    health: u32,
-}
-
-trait Profile {
-    fn get_profile(&self) -> (Entity, String, u32, u32, u32);
+impl Integrity for Person {
+    fn get_integrity(&self) -> u32 {
+        return self.entity.integrity;
+    }
+    fn set_integrity(&mut self, integrity: u32) {
+        self.entity.integrity = integrity;
+    }
 }
 
 impl Profile for Person {
     fn get_profile(&self) -> (Entity, String, u32, u32, u32) {
-        return (self.entity, self.name, self.height, self.weight, self.health);
+        return (self.entity, self.name.clone(), self.height, self.weight, self.health);
     }
 }
-
 
 fn main() {
     let e1: Entity = Entity{
@@ -75,8 +96,8 @@ fn main() {
         y:0,
         integrity: 100
     };
-    println!("{:?}", e1.get_integrity());
-    println!("{:?}", e1.get_position());
+    println!("Position: {:?}", e1.get_position());
+    println!("Integrity: {:?}", e1.get_integrity());
     let p1: Person = Person {
         entity: Entity { 
             x: 0, 
@@ -88,4 +109,7 @@ fn main() {
         weight: 55,
         health: 100
     };
+    println!("Position: {:?}", p1.get_position());
+    println!("Integrity: {:?}", p1.get_integrity());
+    println!("Profile: {:?}", p1.get_profile());
 }
