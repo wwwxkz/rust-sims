@@ -15,21 +15,21 @@ use std::{collections::HashMap};
 //     largest
 // }
 
-
-#[derive(Debug, Clone, Copy)]
-struct Entity {
-    x: u32,
-    y: u32,
-    integrity: u32,
+#[derive(Clone, Debug)]
+enum Rarity {
+    Common,
+    Rare,
 }
 
-#[derive(Clone)]
-struct Person {
-    entity: Entity,
-    name: String,
-    height: u32,
-    weight: u32,
-    health: u32,
+#[derive(Clone, Debug)]
+enum Exterior {
+    Good
+}
+
+#[derive(Clone, Debug)]
+enum Category {
+    Weapon,
+    Kitchen
 }
 
 #[derive(Clone, Debug)]
@@ -37,12 +37,6 @@ enum Order {
     Carnivora,
     Herbivore,
     Omnivore
-}
-
-impl fmt::Display for Order {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{:?}", self)
-    }
 }
 
 #[derive(Clone, Debug)]
@@ -54,10 +48,40 @@ enum Class {
     Bird
 }
 
-impl fmt::Display for Class {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{:?}", self)
-    }
+#[derive(Debug, Clone, Copy)]
+struct Entity {
+    x: u32,
+    y: u32,
+    integrity: u32,
+}
+
+struct Object {
+    entity: Entity,
+    name: String,
+    rarity: Rarity,
+    exterior: Exterior,
+    color: String,
+    price: u32,
+    category: Category
+}
+
+struct Item {
+    entity: Entity,
+    name: String,
+    rarity: Rarity,
+    exterior: Exterior,
+    color: String,
+    price: u32,
+    category: Category
+}
+
+#[derive(Clone)]
+struct Person {
+    entity: Entity,
+    name: String,
+    height: u32,
+    weight: u32,
+    health: u32,
 }
 
 #[derive(Clone)]
@@ -87,6 +111,36 @@ trait Profile {
     fn get_profile(&self) -> (Entity, HashMap<String, String>);
 }
 
+impl fmt::Display for Rarity {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+impl fmt::Display for Exterior {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+impl fmt::Display for Category {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+impl fmt::Display for Order {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+impl fmt::Display for Class {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
 impl Position for Entity {
     fn get_position(&self) -> (u32, u32) {
         return (
@@ -97,6 +151,32 @@ impl Position for Entity {
     fn set_position(&mut self, x: u32, y: u32) {
         self.x = x;
         self.y = y;
+    }
+}
+
+impl Position for Object {
+    fn get_position(&self) -> (u32, u32) {
+        return (
+            self.entity.x,
+            self.entity.y
+        );
+    }
+    fn set_position(&mut self, x: u32, y: u32) {
+        self.entity.x = x;
+        self.entity.y = y;
+    }
+}
+
+impl Position for Item {
+    fn get_position(&self) -> (u32, u32) {
+        return (
+            self.entity.x,
+            self.entity.y
+        )
+    }
+    fn set_position(&mut self, x: u32, y: u32) {
+        self.entity.x = x;
+        self.entity.y = y;
     }
 }
 
@@ -135,6 +215,24 @@ impl Integrity for Entity {
     }
 }
 
+impl Integrity for Object {
+    fn get_integrity(&self) -> u32 {
+        return self.entity.integrity;
+    }
+    fn set_integrity(&mut self, integrity: u32) {
+        self.entity.integrity = integrity;
+    }
+}
+
+impl Integrity for Item {
+    fn get_integrity(&self) -> u32 {
+        return self.entity.integrity;
+    }
+    fn set_integrity(&mut self, integrity: u32) {
+        self.entity.integrity = integrity;
+    }
+}
+
 impl Integrity for Person {
     fn get_integrity(&self) -> u32 {
         return self.entity.integrity;
@@ -150,6 +248,68 @@ impl Integrity for Animal {
     }
     fn set_integrity(&mut self, integrity: u32) {
         self.entity.integrity = integrity;
+    }
+}
+
+impl Profile for Object {
+    fn get_profile(&self) -> (Entity, HashMap<String, String>) {
+        let mut profile: HashMap<String, String> = HashMap::new();
+        profile.insert(
+            "name".to_string(),
+            self.name.clone()
+        );
+        profile.insert(
+            "rarity".to_string(),
+            self.rarity.to_string()
+        );
+        profile.insert(
+            "exterior".to_string(),
+            self.exterior.to_string()
+        );
+        profile.insert(
+            "color".to_string(),
+            self.color.clone()
+        );
+        profile.insert(
+            "price".to_string(),
+            self.price.to_string()
+        );
+        profile.insert(
+            "category".to_string(),
+            self.category.to_string()
+        );
+        return (self.entity, profile);
+    }
+}
+
+impl Profile for Item {
+    fn get_profile(&self) -> (Entity, HashMap<String, String>) {
+        let mut profile: HashMap<String, String> = HashMap::new();
+        profile.insert(
+            "name".to_string(),
+            self.name.clone()
+        );
+        profile.insert(
+            "rarity".to_string(),
+            self.rarity.to_string()
+        );
+        profile.insert(
+            "exterior".to_string(),
+            self.exterior.to_string()
+        );
+        profile.insert(
+            "color".to_string(),
+            self.color.clone()
+        );
+        profile.insert(
+            "price".to_string(),
+            self.price.to_string()
+        );
+        profile.insert(
+            "category".to_string(),
+            self.category.to_string()
+        );
+        return (self.entity, profile);
     }
 }
 
@@ -215,7 +375,6 @@ impl Profile for Animal {
     }
 }
 
-
 fn main() {
     let e1: Entity = Entity{
         x:0, 
@@ -256,4 +415,36 @@ fn main() {
     println!("Position: {:?}", a1.get_position());
     println!("Integrity: {:?}", a1.get_integrity());
     println!("Profile: {:?}", a1.get_profile());
+    let o1: Object = Object { 
+        entity: Entity { 
+            x: 0, 
+            y: 0, 
+            integrity: 100 
+        },
+        name: "Refrigerator".to_string(), 
+        rarity: Rarity::Common, 
+        exterior: Exterior::Good, 
+        color: "C2C2C2".to_string(), 
+        price: 3250, 
+        category: Category::Kitchen 
+    };
+    println!("Position: {:?}", o1.get_position());
+    println!("Integrity: {:?}", o1.get_integrity());
+    println!("Profile: {:?}", o1.get_profile());
+    let i1: Item = Item { 
+        entity: Entity { 
+            x: 0, 
+            y: 0, 
+            integrity: 100 
+        }, 
+        name: "Light sword".to_string(), 
+        rarity: Rarity::Rare, 
+        exterior: Exterior::Good, 
+        color: "FFFFFF".to_string(), 
+        price: 250, 
+        category: Category::Weapon
+    };
+    println!("Position: {:?}", i1.get_position());
+    println!("Integrity: {:?}", i1.get_integrity());
+    println!("Profile: {:?}", i1.get_profile());
 }
