@@ -1,6 +1,7 @@
 use std::fmt::{self, Debug};
 use std::{collections::HashMap};
 
+#[derive(Clone, Debug)]
 pub enum Entities {
     Entity(Entity),
     Person(Person),
@@ -49,6 +50,7 @@ pub struct Entity {
     pub integrity: u32,
 }
 
+#[derive(Clone, Debug)]
 pub struct Object {
     pub entity: Entity,
     pub name: String,
@@ -59,6 +61,7 @@ pub struct Object {
     pub category: Category
 }
 
+#[derive(Clone, Debug)]
 pub struct Item {
     pub entity: Entity,
     pub name: String,
@@ -69,7 +72,7 @@ pub struct Item {
     pub category: Category
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Person {
     pub entity: Entity,
     pub name: String,
@@ -78,7 +81,7 @@ pub struct Person {
     pub health: u32,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Animal {
     pub entity: Entity,
     pub name: String,

@@ -71,5 +71,6 @@ fn main() {
             Entities::Item(i1),
         ],
     };
-    println!("{:?}", game.entities_number());
+    println!("{:?}", game.get_entities());
+    println!("{:?}", game.get_entities_number());
 }
