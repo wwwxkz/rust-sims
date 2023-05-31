@@ -1,4 +1,4 @@
-use crate::entities::*;
+use crate::entities::{*, self};
 
 #[derive(Clone)]
 pub enum State {
@@ -24,8 +24,8 @@ pub trait Status {
     fn get_day(&self) -> u32;
     fn set_day(&mut self, day: u32);
     fn play(&self);
-    fn resume(&self);
-    fn pause(&self);
+    fn resume(&mut self);
+    fn pause(&mut self);
 }
 
 impl Status for Game {
@@ -48,12 +48,22 @@ impl Status for Game {
         self.day = day;
     }
     fn play(&self) {
-        
+        entities::Person {
+            entity: entities::Entity {
+                x: 0,
+                y: 0,
+                integrity: 100,
+            },
+            name: "".to_string(),
+            height: 0,
+            weight: 0,
+            health: 0,
+        };
     }
-    fn resume(&self) {
+    fn resume(&mut self) {
         self.state = State::Playing;
     }
-    fn pause(&self) {
+    fn pause(&mut self) {
         self.state = State::Stopped;
     }
 }

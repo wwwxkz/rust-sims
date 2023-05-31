@@ -1,3 +1,6 @@
+use bevy::prelude::*;
+use bevy_egui::{egui, EguiContexts, EguiPlugin};
+
 use crate::entities::*;
 pub mod entities;
 
@@ -70,6 +73,9 @@ fn main() {
             Entities::Object(o1),
             Entities::Item(i1),
         ],
+        time: 0,
+        day: 0,
+        state: game::State::New
     };
     println!("{:?}", game.get_entities());
     println!("{:?}", game.get_entities_number());

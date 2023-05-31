@@ -2,3 +2,7 @@
 name = "rust-sims"
 version = "0.1.0"
 edition = "2021"
+
+[dependencies]
+bevy = "0.10.1"
+bevy_egui = "0.20.3"
