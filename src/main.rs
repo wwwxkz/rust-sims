@@ -1,3 +1,4 @@
+use bevy::render::view::window;
 use bevy::{prelude::*, window::PrimaryWindow};
 use bevy_egui::{egui, EguiContexts, EguiPlugin, EguiSettings};
 
@@ -10,15 +11,49 @@ pub mod game;
 fn main() {
     App::new()
         .insert_resource(ClearColor(Color::rgb(0.0, 0.0, 0.0)))
-        .insert_resource(Msaa::Sample4)
-        .init_resource::<UiState>()
+        // Bevy game
         .add_plugins(DefaultPlugins)
+        .add_startup_system(spawn_camera)
+        .add_startup_system(spawn_player)
+        // Egui
+        .init_resource::<UiState>()
         .add_plugin(EguiPlugin)
         .add_startup_system(configure_visuals_system)
         .add_startup_system(configure_ui_state_system)
         .add_system(ui_example_system)
         .run();
 }
+
+#[derive(Component)]
+pub struct Player {}
+
+pub fn spawn_player(
+    mut commands: Commands,
+    window_query: Query<&Window, With<PrimaryWindow>>,
+    asset_server: Res<AssetServer>
+) {
+    let window = window_query.get_single().unwrap();
+    commands.spawn((
+        SpriteBundle {
+            transform: Transform::from_xyz(window.width() / 2.0, window.height() / 2.0, 0.0),
+            texture: asset_server.load("sprites/girl.png"),
+            ..default()
+        },
+        Player {},
+    ));
+}
+
+fn spawn_camera(
+    mut commands: Commands,
+    window_query: Query<&Window, With<PrimaryWindow>>
+) {
+    let window = window_query.get_single().unwrap();
+    commands.spawn(Camera2dBundle{
+        transform: Transform::from_xyz(window.width() / 2.0, window.height() / 2.0 , 0.0),
+        ..default()
+    });
+}
+
 #[derive(Default, Resource)]
 struct UiState {
     label: String,
@@ -60,18 +95,6 @@ fn ui_example_system(
                 }
             });
         });
-    });
-
-    egui::CentralPanel::default().show(ctx, |ui| {
-        egui::warn_if_debug_build(ui);
-
-        ui.separator();
-
-        ui.heading("Status");
-        ui.label("Game status");
-
-        ui.heading("Game");
-        ui.label("Playable region");
     });
 
     egui::Window::new("Window")
